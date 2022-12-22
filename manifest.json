@@ -1,0 +1,24 @@
+{
+    "name": "DataV Helper Extensions",
+    "description": "DataV Helper Extensions",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "main.html"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "host_permissions": ["*://*/*"],
+    "permissions": [
+        "tabs",
+        "\u003Call_urls\u003E",
+        "cookies",
+        "contextMenus",
+        "unlimitedStorage",
+        "notifications",
+        "storage",
+        "clipboardWrite"
+    ]
+}

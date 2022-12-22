@@ -1,0 +1,45 @@
+.datav-helper {
+    // padding: 10px 15px;
+    .header {
+        padding: 5px 0 10px;
+        font-size: 16px;
+        font-family: fantasy;
+        color: #4f8fc4;
+        .title {
+            text-align: center;
+        }
+    }
+    .content {
+        background: #000;
+        padding: 5px;
+        border-radius: 5px;
+        margin: 10px 0;
+    }
+    .footer {
+        margin-top: 10px;
+    }
+    .extra {
+        font-size: 12px;
+        color: #929db2;
+        span {
+            font-size: 13px;
+            background-color: #dadeea;
+            color: #2b2d41;
+            text-align: center;
+            height: 20px;
+            line-height: 20px;
+            min-width: 20px;
+            padding-left: 3px;
+            padding-right: 3px;
+            display: inline-block !important;
+            border-radius: 5px;
+        }
+    }
+}
+
+body {
+    margin: 8px !important;
+}
+html {
+    height: max-content;
+}

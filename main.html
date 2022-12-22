@@ -1,0 +1,51 @@
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="main.css" />
+        <script src="third-party/jquery-1.12.4.js"></script>
+    </head>
+    <body>
+        <div class="datav-helper">
+            <div class="header">
+                <div class="title">DataV Helper</div>
+            </div>
+            <div class="content">
+                <!-- <textarea name="" id="textarea" cols="30" rows="10" contenteditable="true"></textarea> -->
+                <div class="iframe">
+                    <iframe src="https://datav.aliyun.com/admin/hook/941964#/" frameborder="0"></iframe>
+                </div>
+            </div>
+            <div class="extra">Use <span>ctrl</span> + <span>s</span> to save code</div>
+            <div class="footer">
+                <button id="openHookPage">打开hook页</button>
+                <button id="openEditPage">打开编辑页</button>
+            </div>
+        </div>
+        <script src="./main.js" type="module"></script>
+    </body>
+</html>
+
+<!-- 
+  方案一
+  仅在调试页面生效
+  0. 显示当前项目名称、项目code
+  1. textarea: 粘贴hook代码
+  2. button: 上传代码 / checkbox: 粘贴后自动上传且刷新页面
+  3. 上传: 调用上传接口, 
+     3.1 上传成功: 刷新页面 
+     3.2 上传失败: 1)登录失效 2)其他
+  4. 其他： 打开编辑页面、打开hook页面
+ -->
+
+<!-- 
+    方案二
+    0. iframe
+    1. 粘贴代码
+    2. ctrl + s 
+    3. 拦截请求
+       3.1 请求成功: 加载当前页面 关闭插件窗口
+       3.2 请求失败: 显示错误信息
+    4. 打开hook、编辑页面
+       4.1 tab列表中已有该页面, 切换tab
+       4.2 tab列表中无该页面, 新增tab
+  -->
