@@ -1,29 +1,40 @@
-<html lang="zh">
+<!DOCTYPE html>
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <link rel="stylesheet" href="main.css" />
-        <script src="third-party/jquery-1.12.4.js"></script>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="content.css" />
     </head>
     <body>
         <div class="datav-helper">
-            <div class="header">
-                <div class="title">DataV Helper</div>
+            <div class="datav-toggle" id="datav-toggler">
+                <i class="octotree-toggle-icon" role="button">></i>
+                <span>DataV Hook</span>
             </div>
-            <div class="content">
-                <!-- <textarea name="" id="textarea" cols="30" rows="10" contenteditable="true"></textarea> -->
-                <div class="iframe">
-                    <iframe src="https://datav.aliyun.com/admin/hook/941964#/" frameborder="0"></iframe>
+            <div class="datav-views">
+                <div class="header">
+                    <div class="title">DataV Helper</div>
+                </div>
+                <div class="content">
+                    <div class="project">
+                        <div id="ti"></div>
+                    </div>
+                    <div class="iframe">
+                        <iframe src="https://datav.aliyun.com/admin/hook/941964" frameborder="0" id="iframe"></iframe>
+                    </div>
+                </div>
+                <div class="extra">Use <span>ctrl</span> + <span>s</span> to save code</div>
+                <div class="footer">
+                    <button id="openHookPage">打开hook页</button>
+                    <button id="openEditPage">打开编辑页</button>
                 </div>
             </div>
-            <div class="extra">Use <span>ctrl</span> + <span>s</span> to save code</div>
-            <div class="footer">
-                <button id="openHookPage">打开hook页</button>
-                <button id="openEditPage">打开编辑页</button>
-            </div>
         </div>
-        <script src="./main.js" type="module"></script>
     </body>
 </html>
+<!-- <script src="./js/main.js" type="module"></script> -->
 
 <!-- 
   方案一
@@ -40,6 +51,19 @@
 <!-- 
     方案二
     0. iframe
+    1. 粘贴代码
+    2. ctrl + s 
+    3. 拦截请求
+       3.1 请求成功: 加载当前页面 关闭插件窗口
+       3.2 请求失败: 显示错误信息
+    4. 打开hook、编辑页面
+       4.1 tab列表中已有该页面, 切换tab
+       4.2 tab列表中无该页面, 新增tab
+  -->
+
+<!-- 
+    方案三
+    0. content_script
     1. 粘贴代码
     2. ctrl + s 
     3. 拦截请求

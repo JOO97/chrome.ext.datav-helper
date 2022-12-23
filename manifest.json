@@ -2,23 +2,27 @@
     "name": "DataV Helper Extensions",
     "description": "DataV Helper Extensions",
     "version": "1.0",
-    "manifest_version": 3,
-    "action": {
-        "default_popup": "main.html"
-    },
+    "manifest_version": 2,
     "background": {
-        "service_worker": "background.js",
-        "type": "module"
+        "scripts": ["./js/background.js"],
+        "persistent": true
     },
-    "host_permissions": ["*://*/*"],
+    "content_scripts": [
+        {
+            "run_at": "document_idle",
+            "matches": ["*://datav.aliyun.com/screen/*"],
+            "css": ["content.css"],
+            "js": ["./third-party/jquery-1.12.4.js", "./js/content.js"]
+        }
+    ],
     "permissions": [
+        "*://datav.aliyun.com/*",
         "tabs",
-        "\u003Call_urls\u003E",
         "cookies",
         "contextMenus",
-        "unlimitedStorage",
         "notifications",
         "storage",
-        "clipboardWrite"
-    ]
+        "webRequest"
+    ],
+    "optional_permissions": ["<all_urls>"]
 }

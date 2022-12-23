@@ -1,0 +1,81 @@
+.datav-helper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #0d1117;
+    height: 100vh;
+    padding: 10px;
+    transform: translateX(0) scale(1) !important;
+    transition: transform 0.3s ease-in 0s;
+}
+.datav-helper iframe {
+    height: 400px;
+}
+
+.datav-helper .header {
+    padding: 5px 0 10px;
+    font-size: 16px;
+    font-family: fantasy;
+    color: #4f8fc4;
+}
+.datav-helper .header .title {
+    text-align: center;
+}
+.datav-helper .content {
+    background: #000;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+.datav-helper .footer {
+    margin-top: 10px;
+}
+.datav-helper .extra {
+    font-size: 12px;
+    color: #929db2;
+}
+.datav-helper .extra span {
+    font-size: 13px;
+    background-color: #dadeea;
+    color: #2b2d41;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    min-width: 20px;
+    padding-left: 3px;
+    padding-right: 3px;
+    display: inline-block !important;
+    border-radius: 5px;
+}
+
+.datav-toggle {
+    position: absolute;
+    right: -30px;
+    flex-direction: column;
+    background-color: #292d31;
+    position: fixed;
+    padding: 8px 2px;
+    border-radius: 3px;
+
+    cursor: pointer;
+    transition: opacity 0.4s;
+}
+
+.datav-toggle:hover {
+    opacity: 0;
+}
+
+.datav-toggle span {
+    font-size: 14px;
+    font-family: fantasy;
+    color: #4f8fc4;
+    writing-mode: tb-rl;
+    transform: rotate(-180deg);
+}
+.datav-toggle i {
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+}

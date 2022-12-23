@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html style="overflow-x: hidden; overflow-y: visible">
+
+<head lang="en">
+  <meta name="aplus-rhost-v" content="sg.mmstat.com">
+  <meta name="aplus-rhost-g" content="sg.mmstat.com">
+  <meta charset="UTF-8">
+  <meta name="renderer" content="webkit">
+  <meta name="data-spm" content="datav">
+  
+  <!-- Open Graph data -->
+  <meta property="og:title" content="zjm_test_上城法院" />
+  <meta property="og:url" content="https://datav.aliyun.com/screen/941964" />
+  <meta property="og:image" content="https://img.alicdn.com/tfs/TB1IzRzRUz1gK0jSZLeXXb9kVXa-300-300.png" />
+  <meta property="og:description" content="由阿里云 DataV 数据可视化产品制作" />
+  
+  
+  <title>...</title>
+  <link href="//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/libs/preview.css" rel="stylesheet" />
+  <link href="//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/libs/error_cover.css"  rel="stylesheet"/>
+  <script>
+    document.domain = 'datav.aliyun.com';
+  </script>
+</head>
+
+<body data-spm="10712494" class="zh_CN CN">
+  <div id="screen" class="screen container">
+  </div>
+  <div id="datav-loading" style="background: #0f2a42">
+    <a target="_blank" href="javascript:;">
+      
+        <img class="datav-logo" src="//img.alicdn.com/tfs/TB1RzYryY9YBuNjy0FgXXcxcXXa-300-300.gif" />
+        <img class="text-logo" src="//img.alicdn.com/tfs/TB1EBjryY9YBuNjy0FgXXcxcXXa-500-129.png" width=100/>
+      
+    </a>
+  </div>
+  <div class="datav-layout datavLayout">
+    <a id="datav-text-logo" target="_blank" href="http://data.aliyun.com/visual/datav">
+      <img src="//img.alicdn.com/tfs/TB1cNyCyYSYBuNjSspiXXXNzpXa-500-129.png" width=50 />
+    </a>
+  </div>
+  <div id="error-cover"> </div>
+  
+  <script type="text/javascript" src='//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/libs/browser_check.js'></script>
+  <script type="text/javascript" src='//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/cube.js'></script>
+  
+  <script src="//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/libs/jquery.min.js"></script>
+  <script src="//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/libs/event.js"></script>
+  
+  <script type="text/javascript">
+    window.global = window;
+    (function () {
+      // main config for this page
+      var appConfig = {
+        base: '//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/',
+        debug: false
+      };
+      // semantic 需要
+      Cube.register('jquery', $);
+
+      const fromApp = '';
+      const url = new URL(window.location.href);
+      const fromAppKey = '';
+
+      window.process = {
+        fromApp,
+        fromAppKey,
+        env: {
+          NODE_ENV: 'prod'
+        },
+        staticBase: 'cdn-service.datav.aliyun.com',
+        marqueeUrl: 'https://data.aliyun.com/datav/marquee?wh_ttid=pc',
+        marqueeJsonpCallback: 'tms_jsonp_156241',
+        inner: 'false',
+        serviceBase: 'service.datav.aliyun.com',
+        componentCenterBase: 'https://resource.datav.aliyun.com',
+        staticPath: '//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/'
+      }
+
+      window.screenAlias = '941964'
+      window.share = { event: new EventEmitter() }
+      // cube >= 3.1.25 才支持带 query 参数, 否则会导致依赖加载失败
+      var canCubeDepWithQuery = true && Cube.toString && (Cube.toString() >= 'Cube:v3.1.25');
+
+      var share;
+
+      Cube.init({
+        base: appConfig.base,
+        debug: appConfig.debug,
+        version: 'm=1',
+        enableCss: true,
+        strict: false,
+        global: window,
+        remoteBase: {
+          'datav': 'https://resource.datav.aliyun.com/cube/',
+          'main': '/static'
+        },
+        timeout: 60000
+      });
+
+      // 根据 namespace 判断是大屏预览还是合并节点预览
+      let namespace = 'preview';
+      Cube.use(['/common/share.js', 'main:/v3/screen/941964/config.js' + ( canCubeDepWithQuery ? window.location.search : '')], function (Share, cfg) {
+        document.title = cfg.name;
+        share = Share({
+          status: 'preview',
+          fromApp,
+          fromAppKey,
+          datavBase: '',
+          id: '941964',
+          datacenter: '//dc.datav.aliyun.com/',
+          config: cfg,
+          ratioX: null,
+          ratioY: null,
+          is4service: 'false',
+          source: 'aliyun',
+          locale: 'zh_CN',
+          region: 'CN',
+          componentCenterBase: 'https://resource.datav.aliyun.com'
+        });
+
+        Cube.use(['main:/screens/941964/hook.js' + ( canCubeDepWithQuery ? window.location.search : ''), '/preview/index.js'], function (hook, Screen) {
+          window.screen = cfg.config || {};
+          window.screen.width && $('body').css('width', window.screen.width);
+          window.screen.height && $('body').css('height', window.screen.height);
+          $('head').append('<meta name="viewport" content="width=' + window.screen.width + '"/>');
+          Screen.run('941964', cfg, hook);
+        });
+        const onload = () => {
+          $('#datav-loading').fadeOut(400, () => {
+            $('.datav-layout').css('visibility', 'visible');
+            resize();
+          });
+        };
+        $(window, document).resize(function () {
+          resize();
+        }).load(onload);
+        setTimeout(onload, 10 * 1000);
+      })
+
+      function resize() {
+        if (window.screen.display == 2) { // 等比缩放高度铺满
+          resizeCenter();
+        } else if (window.screen.display == 3) { // 全屏铺满
+          resizeFull();
+        } else if (window.screen.display == 4) { // 等比缩放高度铺满并且可以左右移动
+          resizeHeight();
+        } else if (window.screen.display === 0) { // 不缩放
+          resizeNone();
+        } else { // 等比缩放宽度铺满
+          resizeWidth();
+        }
+        window.share.event.emit('ratio-change', {
+          ratioX: share.get('ratioX'),
+          ratioY: share.get('ratioY')
+        })
+      }
+      function resizeNone() {
+        share.set('ratioX', 1);
+        share.set('ratioY', 1);
+        $('body').css({
+          overflow: "hidden",
+          position: 'relative'
+        });
+      }
+      function resizeWidth() {
+        var ratio = $(window).width() / (window.screen.width || $('body').width());
+        share.set('ratioX', ratio)
+        share.set('ratioY', ratio)
+        $('body').css({
+          transform: "scale(" + ratio + ")",
+          transformOrigin: "left top",
+          backgroundSize: "100%"
+        });
+      }
+      function resizeCenter() {
+        if (!window.screen.height || !window.screen.width) return resizeCenterBak();
+        var ratio = $(window).height() / window.screen.height;
+        share.set('ratioX', ratio)
+        share.set('ratioY', ratio)
+        $('body').css({
+          transform: "scale(" + ratio + ")",
+          transformOrigin: "left top",
+          backgroundSize: 100 * (window.screen.width / $(window).width() * ratio) + "%" + ' 100%',
+          backgroundPosition: ($(window).width() - $('body').width() * ratio) / 2 + "px top",
+          marginLeft: ($(window).width() - $('body').width() * ratio) / 2
+        });
+      }
+
+      function resizeHeight() { //
+        if (!window.screen.height || !window.screen.width) return resizeCenterBak();
+        var ratio = $(window).height() / window.screen.height;
+        share.set('ratioX', ratio)
+        share.set('ratioY', ratio)
+        $('body').css({
+          transform: "scale(" + ratio + ")",
+          transformOrigin: "left top",
+          backgroundSize: 100 * (window.screen.width / $(window).width() * ratio) + "%" + ' 100%',
+          backgroundPosition: ($(window).width() - $('body').width() * ratio) / 2 + "px top",
+          // marginLeft: ($(window).width() - $('body').width() * ratio) / 2
+        });
+        $('html').css({
+          overflowX: 'scroll',
+        })
+      }
+
+      function resizeFull() {
+        if (!window.screen.height || !window.screen.width) return resizeFullBak();
+        var ratioX = $(window).width() / window.screen.width;
+        var ratioY = $(window).height() / window.screen.height;
+        share.set('ratioX', ratioX)
+        share.set('ratioY', ratioY)
+        $('body').css({
+          transform: "scale(" + ratioX + ", " + ratioY + ")",
+          transformOrigin: "left top",
+          backgroundSize: "100% 100%",
+        });
+      }
+
+      function resizeCenterBak() {
+        var ratioX = $(window).width() / $('body').width();
+        var ratioY = $(window).height() / $('body').height();
+        var ratio = Math.min(ratioX, ratioY);
+        share.set('ratioX', ratio)
+        share.set('ratioY', ratio)
+        $('body').css({
+          transform: "scale(" + ratio + ")",
+          transformOrigin: "left top",
+          backgroundSize: (1 / ratioX) * 100 * ratio + "%",
+          backgroundPosition: ($(window).width() - $('body').width() * ratio) / 2 + "px top",
+          marginLeft: ($(window).width() - $('body').width() * ratio) / 2
+        });
+      }
+      function resizeFullBak() {
+        var ratioX = $(window).width() / $('body').width();
+        var ratioY = $(window).height() / $('body').height();
+        share.set('ratioX', ratioX)
+        share.set('ratioY', ratioY)
+        $('body').css({
+          transform: "scale(" + ratioX + ", " + ratioY + ")",
+          transformOrigin: "left top",
+          backgroundSize: "100% " + ratioY * 100 + "%",
+        });
+      }
+      function getComList(coms) {
+        var result = [];
+        var comList = {};
+        coms.forEach(function (com, index) {
+          if (com.parent) return;
+          var idx = com.attr.zIndex || 1000;
+          if (!comList[idx]) comList[idx] = [];
+          comList[idx].push(com);
+        });
+        Object.keys(comList).sort(function (a, b) {
+          a = a * 1;
+          b = b * 1;
+          if (a > b) return 1;
+          if (a < b) return -1;
+          return 0
+        }).forEach(function (idx) {
+          comList[idx].forEach(function (com) {
+            result.push(com.com_id);
+          });
+        });
+        return result;
+      }
+    })();
+  </script>
+  
+<script>
+  window._csrf = 'OzF1ia3j-aNKY76zA5poqB19-K0XdzJN2cG8';
+</script>
+  <script src="//cdn-service.datav.aliyun.com/datav-static/2.54.3_3/libs/analytics.js"></script>
+  
+</body>
+</html>
