@@ -1,18 +1,11 @@
 /* 接收信息 */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener(async (data, _, sendResponse) => {
-        if (data['event'] === 'ready') {
-            const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-            const tabId = await getCurrentTabId()
-            chrome.tabs.sendMessage(tabId, {
-                form: 'bg',
-                type: 'tab',
-                data: tab
-            })
-        }
-        sendResponse({ response: 'from bg' })
+        sendResponse({ status: 'ok' })
     })
+}
 
+const requestHandler = () => {
     chrome.webRequest.onCompleted.addListener(
         (details) => {
             const { frameType, type, method, statusCode } = details
@@ -29,4 +22,5 @@ const receiveMessage = () => {
     )
 }
 
+requestHandler()
 receiveMessage()
