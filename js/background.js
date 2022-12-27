@@ -1,10 +1,11 @@
-/* 接收信息 */
+/* receive message */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener(async (data, _, sendResponse) => {
         sendResponse({ status: 'ok' })
     })
 }
 
+/* webRequest */
 const requestHandler = () => {
     chrome.webRequest.onCompleted.addListener(
         (details) => {

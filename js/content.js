@@ -1,7 +1,9 @@
 const template = `
     <nav class="datav-helper" id="datav-helper">
             <div class="datav-toggle" id="datav-helper-toggler">
-                <span>DataV Helper<i class="datav-toggle-icon" role="button">></i></span>
+                <span> DataV  Helper
+                <i class="datav-toggle-icon" role="button">></i>
+                </span>
             </div>
             <div class="datav-views">
                 <div class="header">
@@ -15,7 +17,7 @@ const template = `
                         <iframe src="" frameborder="0" id="hook"></iframe>
                     </div>
                 </div>
-                <div class="extra">Use <span>ctrl</span> + <span>s</span> to save code</div>
+                <div class="tip">Use <span>ctrl</span> + <span>s</span> to save code</div>
                 <div class="footer">
                     <button id="refresh">刷新</button>
                     <button id="openHookPage">打开hook页</button>
@@ -24,14 +26,13 @@ const template = `
             </div>
         </nav>
 `
+let hookUrl = '' //hook url
 
-let hookUrl = ''
+// const sendMessage = (message) => {
+//     chrome.runtime.sendMessage(message, (data) => {})
+// }
 
-const sendMessage = (message) => {
-    chrome.runtime.sendMessage(message, (data) => {})
-}
-
-/* 接收信息 */
+/* receive message */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener((res, sender, sendResponse) => {
         if (res['type'] === 'request') {
@@ -50,6 +51,7 @@ const reload = () => {
     window.location.reload()
 }
 
+/* toggler */
 const toggleHandler = () => {
     const toggle = $('#datav-helper')
     toggle.hover(
@@ -64,6 +66,7 @@ const toggleHandler = () => {
     )
 }
 
+/* buttons */
 const buttonClickHandler = () => {
     $('#openHookPage').click(() => window.open(hookUrl))
 
@@ -72,6 +75,7 @@ const buttonClickHandler = () => {
     $('#openEditPage').click(() => window.open(hookUrl.replace('hook', 'screen')))
 }
 
+/* event register */
 const eventRegister = () => {
     window.addEventListener('beforeunload', () => {
         $('#hook').remove()
@@ -81,10 +85,13 @@ const eventRegister = () => {
     buttonClickHandler()
 }
 
+/* on page ready */
 $(document).ready(() => {
     $('body').append(template)
+
     hookUrl = window.location.href.replace('screen', 'admin/hook')
     $('#hook').attr('src', hookUrl)
+
     receiveMessage()
     eventRegister()
 })
