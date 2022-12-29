@@ -1,4 +1,5 @@
-const template = `
+const dataVHelper = {
+    template: `
     <nav id="datav-helper">
         <div id="datav-helper-toggle">
             <span> DataV  Helper
@@ -22,10 +23,10 @@ const template = `
             </div>
         </div>
     </nav>
-`
-
-const hookUrl = window.location.href.replace('screen', 'admin/hook') //hook url
-let hookEl = null
+`,
+    hookUrl: window.location.href.replace('screen', 'admin/hook'), //hook url
+    hookEl: null
+}
 
 /* receive message */
 const receiveMessage = () => {
@@ -42,7 +43,7 @@ const receiveMessage = () => {
 
 /* reload */
 const reload = () => {
-    hookEl.remove() //更新后移除iframe, 不会显示hook页面的提示弹窗
+    dataVHelper.hookEl.remove() //更新后移除iframe, 不会显示hook页面的提示弹窗
     window.location.reload()
 }
 
@@ -59,15 +60,17 @@ const toggleHandler = () => {
 
 /* button handlers*/
 const buttonClickHandler = () => {
-    document.querySelector('#openHookPage').onclick = () => window.open(hookUrl)
-    document.querySelector('#refresh').onclick = reload
-    document.querySelector('#openEditPage').onclick = () => window.open(hookUrl.replace('hook', 'screen'))
+    document.querySelector('#openHookPage').onclick = () => window.open(dataVHelper.hookUrl)
+    document.querySelector('#refresh').onclick = () => {
+        reload()
+    }
+    document.querySelector('#openEditPage').onclick = () => window.open(dataVHelper.hookUrl.replace('hook', 'screen'))
 }
 
 /* event register */
 const eventRegister = () => {
     window.addEventListener('beforeunload', () => {
-        hookEl.remove()
+        dataVHelper.hookEl.remove()
         return null
     })
     toggleHandler()
@@ -76,14 +79,28 @@ const eventRegister = () => {
 
 /* init */
 const init = () => {
+    window.addEventListener('load', () => {
+        // 获取当前页面body标签的缩放值
+        let scale = 1
+        const bodyTransform = document.body.style.transform
+        const transform = bodyTransform.split(' ')
+        transform.forEach((t) => {
+            if (t.indexOf('scale') !== -1) {
+                scale = t.replace('scale(', '').replace(')', '')
+            }
+        })
+        document.body.style.setProperty('--datav-helper-scale', 1 / scale)
+    })
+
     const datavHelperPanel = document.createElement('div')
-    datavHelperPanel.innerHTML = template
+    datavHelperPanel.innerHTML = dataVHelper.template
     document.body.appendChild(datavHelperPanel)
 
-    hookEl = document.querySelector('#hook')
-    hookEl.setAttribute('src', hookUrl)
+    dataVHelper.hookEl = document.querySelector('#hook')
+    dataVHelper.hookEl.setAttribute('src', dataVHelper.hookUrl)
 
     receiveMessage()
     eventRegister()
 }
+
 init()

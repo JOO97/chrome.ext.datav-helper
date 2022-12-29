@@ -1,19 +1,23 @@
 {
     "name": "DataV Helper",
     "description": "DataV Helper",
-    "version": "1.0",
+    "version": "2.0",
     "manifest_version": 3,
+    "action": {
+        "default_title": "DataV Helper",
+        "default_popup": "/popup.html"
+    },
     "background": {
         "service_worker": "./background.js"
     },
     "content_scripts": [
         {
             "run_at": "document_idle",
-            "matches": ["<all_urls>"],
-            "css": ["./content.css"],
-            "js": ["./content.js"]
+            "matches": ["*://datav.aliyun.com/screen/*"],
+            "css": ["/content.css"],
+            "js": ["/content.js"]
         }
     ],
-    "permissions": ["tabs", "webRequest"],
+    "permissions": ["tabs", "webRequest", "storage", "activeTab", "scripting", "webNavigation"],
     "host_permissions": ["<all_urls>"]
 }

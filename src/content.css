@@ -1,3 +1,7 @@
+:root {
+    --datav-helper-scale: 1;
+}
+
 #datav-helper {
     position: fixed;
     left: 0;
@@ -5,12 +9,13 @@
     background-color: #0d1117;
     height: 100%;
     padding: 10px;
-    transform: translateX(-100%);
     transition: transform 0.3s ease-in 0s;
+    transform-origin: left top;
+    transform: translateX(calc(-100% * var(--datav-helper-scale))) scale(var(--datav-helper-scale));
 }
 
 #datav-helper.active {
-    transform: translateX(0);
+    transform: translateX(0) scale(var(--datav-helper-scale));
 }
 
 #datav-helper.active #datav-helper-toggle {

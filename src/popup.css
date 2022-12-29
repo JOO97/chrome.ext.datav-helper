@@ -1,0 +1,111 @@
+:root {
+    --bg: #fafcff;
+    --theme: #4f8fc4;
+}
+
+body,
+html {
+    background-color: var(--bg);
+    margin: 0;
+    padding: 0;
+}
+
+#datav-helper-popup {
+    min-width: 350px;
+    background-color: var(--bg);
+}
+
+#datav-helper-popup h2 {
+    text-align: center;
+    color: var(--theme);
+}
+
+#datav-helper-popup .form {
+    border-bottom: 1px solid #f6f8fd;
+}
+
+#datav-helper-popup .footer {
+    border-top: 1px solid #f6f8fd;
+    padding: 5px 12px;
+    font-size: 16px;
+}
+
+#datav-helper-popup .form input {
+    font-family: fantasy;
+    width: 100%;
+    display: block;
+    border: none;
+    outline: none;
+    height: 40px;
+    padding: 5px 12px;
+    font-size: 16px;
+}
+
+#datav-helper-popup .form input::placeholder {
+    color: #bcc4d2;
+}
+
+#datav-helper-popup ul {
+    list-style: none;
+    padding-inline-start: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+#datav-helper-popup li {
+    border-left: 3px solid transparent;
+    line-height: 40px;
+    font-family: cursive;
+    font-size: 14px;
+    transition: all 0.5s;
+}
+
+#datav-helper-popup li:hover {
+    background-color: #eff3f9;
+    border-left-color: var(--theme);
+}
+
+#datav-helper-popup li:hover .del {
+    opacity: 1 !important;
+}
+
+#datav-helper-popup .list-item-content {
+    display: flex;
+    flex-flow: nowrap;
+    padding: 0 12px;
+    justify-content: space-between;
+}
+
+#datav-helper-popup .list-item-content .extra {
+    margin-left: 20px;
+    flex-shrink: 0;
+}
+
+#datav-helper-popup .list-item-content .extra span {
+    font-size: 12px;
+    background-color: #dadeea;
+    color: #2b2d41;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+    min-width: 20px;
+    padding-left: 3px;
+    padding-right: 3px;
+    display: inline-block;
+    border-radius: 4px;
+    font-family: fantasy;
+}
+
+#datav-helper-popup .list-item-content .extra span.del {
+    color: #e81224;
+    width: 20px;
+    cursor: pointer;
+    min-width: unset;
+    opacity: 0;
+}
+
+#datav-helper-popup .list-item-content .extra i {
+    font-family: fantasy;
+    color: #b1afc0;
+    font-style: normal;
+}
