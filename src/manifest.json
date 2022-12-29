@@ -1,0 +1,19 @@
+{
+    "name": "DataV Helper",
+    "description": "DataV Helper",
+    "version": "1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "./background.js"
+    },
+    "content_scripts": [
+        {
+            "run_at": "document_idle",
+            "matches": ["<all_urls>"],
+            "css": ["./content.css"],
+            "js": ["./content.js"]
+        }
+    ],
+    "permissions": ["tabs", "webRequest"],
+    "host_permissions": ["<all_urls>"]
+}

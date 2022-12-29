@@ -1,0 +1,23 @@
+{
+  "name": "chrome.ext.datav-updater",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JOO97/chrome.ext.datav-updater.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JOO97/chrome.ext.datav-updater/issues"
+  },
+  "homepage": "https://github.com/JOO97/chrome.ext.datav-updater#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}

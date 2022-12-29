@@ -1,6 +1,6 @@
 /* receive message */
 const receiveMessage = () => {
-    chrome.runtime.onMessage.addListener(async (data, _, sendResponse) => {
+    chrome.runtime.onMessage.addListener(async (_, __, sendResponse) => {
         sendResponse({ status: 'ok' })
     })
 }
