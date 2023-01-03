@@ -19,7 +19,7 @@
 
 1.2 选择`加载已解压的扩展程序`，将插件文件导入
 
-![image-20221230093231573](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230093231573.png)
+![image-20221230093231573](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230093231573.png)
 
 ### 2 在非部署版大屏中使用
 
@@ -27,11 +27,11 @@
 
 2.2 鼠标移入后可看到嵌入的hook页面，将代码粘贴到编辑面板中，使用`ctrl + s`进行保存，之后预览页面会自动进行刷新
 
-![image-20221230092000042](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230092000042.png)
+![image-20221230092000042](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230092000042.png)
 
 
 
-![image-20221230092018790](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230092018790.png)
+![image-20221230092018790](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230092018790.png)
 
 ### 3 在部署版大屏中使用
 
@@ -39,14 +39,14 @@
 
 3.1 点击插件的logo，打开插件弹窗
 
-![image-20221230093954840](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230093954840.png)
+![image-20221230093954840](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230093954840.png)
 
 3.2 输入配置地址(地址需要包含screen字符)，按下`enter`键进行添加， 点击`del`按钮进行删除(添加后需要刷新页面)
 
-![image-20221230094030051](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230094030051.png)
+![image-20221230094030051](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230094030051.png)
 
-![image-20221230093114910](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230094100754.png)
+![image-20221230093114910](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230094100754.png)
 
-![image-20221230094237311](C:/Users/LEGION/AppData/Roaming/Typora/typora-user-images/image-20221230094237311.png)
+![image-20221230094237311](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230094237311.png)
 
 3.3 其余步骤`同2.1~2.2`
