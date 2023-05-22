@@ -19,6 +19,7 @@ const dataVHelper = {
             <div class="footer">
                 <button id="refreshHook">Reload Hook</button>
                 <button id="refresh">Reload Page</button>
+                <br />
                 <button id="openHookPage">Open Hook Page</button>
                 <button id="openEditPage">Open Edit Page</button>
             </div>
@@ -114,7 +115,10 @@ const getBodyScale = () => {
 				scaleH = transform;
 			}
 		}
-	} catch (error) {}
+	} catch (error) {
+		console.log('error', error);
+	}
+
 	return {
 		enable: Boolean(bodyTransform),
 		scaleW,
@@ -146,7 +150,12 @@ const init = () => {
 		}, 1000);
 	});
 
-	window.addEventListener('resize', () => setScale());
+	window.addEventListener('resize', () => {
+		// 延迟设置
+		setTimeout(() => {
+			setScale();
+		}, 300);
+	});
 
 	//创建面板元素
 	const datavHelperPanel = document.createElement('div');
