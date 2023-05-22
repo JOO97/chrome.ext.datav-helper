@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/JOO97/chrome.ext.datav-helper/compare/v1.0.0...v1.1.0) (2023-05-22)
+
+
+### Features
+
+* **/content:** add refresh hook button ([21be120](https://github.com/JOO97/chrome.ext.datav-helper/commit/21be12017f4a8d1f1d59214b663b84128606a535))
+
 ## [1.0.0](https://github.com/JOO97/chrome.ext.datav-helper/compare/v1.1.0...v1.0.0) (2023-05-22)
 
 ## 1.1.0 (2023-05-22)
