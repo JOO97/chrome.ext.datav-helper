@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/JOO97/chrome.ext.datav-helper/compare/v1.1.0...v1.1.1) (2023-05-22)
+
+
+### Bug Fixes
+
+* **content:** fix bugs of scale value ([ecf78f7](https://github.com/JOO97/chrome.ext.datav-helper/commit/ecf78f787d58f17011035798b61cdb1c53a7fcd3))
+
 ## [1.1.0](https://github.com/JOO97/chrome.ext.datav-helper/compare/v1.0.0...v1.1.0) (2023-05-22)
 
 
