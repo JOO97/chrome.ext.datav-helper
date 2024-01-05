@@ -1,10 +1,10 @@
 {
-    "name": "DataV Helper",
-    "description": "DataV Helper",
+    "name": "Hook Helper",
+    "description": "Hook Helper",
     "version": "2.0",
     "manifest_version": 3,
     "action": {
-        "default_title": "DataV Helper",
+        "default_title": "Hook Helper",
         "default_popup": "/popup.html"
     },
     "background": {
@@ -13,7 +13,7 @@
     "content_scripts": [
         {
             "run_at": "document_idle",
-            "matches": ["*://datav.aliyun.com/screen/*"],
+            "matches": ["*://datav.aliyun.com/screen/*", "*://xyksh.nebulabd.cn/screen/*"],
             "css": ["/content.css"],
             "js": ["/content.js"]
         }

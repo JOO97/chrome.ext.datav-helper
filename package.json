@@ -1,30 +1,30 @@
 {
-	"name": "datav-helper-extension",
-	"version": "1.1.1",
-	"description": "DataV Helper Chrome Extension",
-	"main": "index.js",
-	"devDependencies": {
-		"gulp": "^4.0.2",
-		"gulp-clean": "^0.4.0",
-		"gulp-cssmin": "^0.2.0",
-		"gulp-minify-html": "^1.0.6",
-		"gulp-uglify": "^3.0.2",
-		"standard-version": "^9.5.0"
-	},
-	"scripts": {
-		"build": "gulp",
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"release": "standard-version"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/JOO97/chrome.ext.datav-helper.git"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/JOO97/chrome.ext.datav-helper/issues"
-	},
-	"homepage": "https://github.com/JOO97/chrome.ext.datav-helper#readme"
+    "name": "datav-helper-extension",
+    "version": "1.1.1",
+    "description": "Hook Helper Chrome Extension",
+    "main": "index.js",
+    "devDependencies": {
+        "gulp": "^4.0.2",
+        "gulp-clean": "^0.4.0",
+        "gulp-cssmin": "^0.2.0",
+        "gulp-minify-html": "^1.0.6",
+        "gulp-uglify": "^3.0.2",
+        "standard-version": "^9.5.0"
+    },
+    "scripts": {
+        "build": "gulp",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "release": "standard-version"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/JOO97/chrome.ext.datav-helper.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/JOO97/chrome.ext.datav-helper/issues"
+    },
+    "homepage": "https://github.com/JOO97/chrome.ext.datav-helper#readme"
 }

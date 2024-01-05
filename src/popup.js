@@ -58,6 +58,10 @@ const setListItem = async () => {
 }
 
 const init = async () => {
+    // const res2 = await axios.get('http://localhost:3001/project/list');
+
+    // console.log('res2', res2);
+
     receiveMessage()
     const res = await chrome.storage.sync.get('origins')
     origins = res['origins'] || []
