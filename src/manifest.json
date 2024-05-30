@@ -1,23 +1,54 @@
 {
-    "name": "Hook Helper",
-    "description": "Hook Helper",
-    "version": "2.0",
-    "manifest_version": 3,
-    "action": {
-        "default_title": "Hook Helper",
-        "default_popup": "/popup.html"
-    },
-    "background": {
-        "service_worker": "./background.js"
-    },
-    "content_scripts": [
-        {
-            "run_at": "document_idle",
-            "matches": ["*://datav.aliyun.com/screen/*", "*://xyksh.nebulabd.cn/screen/*"],
-            "css": ["/content.css"],
-            "js": ["/content.js"]
-        }
-    ],
-    "permissions": ["tabs", "webRequest", "storage", "activeTab", "scripting", "webNavigation"],
-    "host_permissions": ["<all_urls>"]
+  "name": "Hook Helper",
+  "description": "Hook Helper",
+  "version": "2.0",
+  "manifest_version": 3,
+  "action": {
+    "default_title": "Hook Helper",
+    "default_popup": "/popup.html"
+  },
+  "background": {
+    "service_worker": "./background.js"
+  },
+  "content_scripts": [
+    {
+      "run_at": "document_idle",
+      "matches": [
+        "*://datav.aliyun.com/screen/*",
+        "*://datav.aliyun.com/admin/*",
+        "*://datav.aliyun.com/*/project",
+        "*://xyksh.nebulabd.cn/screen/*",
+        "*://xyksh.nebulabd.cn/admin/*",
+        "*://xyksh.nebulabd.cn/*/project"
+      ],
+      "css": [
+        "/content.css"
+      ],
+      "js": [
+        "/content.js"
+      ]
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "permissions": [
+    "tabs",
+    "webRequest",
+    "storage",
+    "activeTab",
+    "scripting",
+    "webNavigation",
+    "declarativeNetRequest",
+    "declarativeNetRequestFeedback"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
 }

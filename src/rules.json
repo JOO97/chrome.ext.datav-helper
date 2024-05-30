@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "allow"
+    },
+    "condition": {
+      "urlFilter": "hook?workspaceId=*",
+      "resourceTypes": [
+        "main_frame",
+        "xmlhttprequest"
+      ]
+    }
+  }
+]

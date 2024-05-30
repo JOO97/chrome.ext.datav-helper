@@ -41,12 +41,25 @@ let panelFixed = false
 /* receive message */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener((res, sender, sendResponse) => {
-        console.log('==========', res)
-        if (res['type'] === 'request') {
-            // 更新hook成功 刷新页面
-            if (res['status'] === 200) {
-                reload()
+        console.log('receiveMessage', res)
+        if (res['type'] === 'request' && res['status'] === 200) {
+            switch (res['name']) {
+                // 更新hook成功 刷新页面
+                case 'updateHook':
+                    reload()
+                    break
+                //控制台的项目列表有更新
+                case 'getProject':
+                    break
+                //请求当前screen信息接口
+                case 'getScreenInfo':
+                    getScreenInfo()
+                    break
+                default:
+                    break
             }
+        } else {
+            console.log('22222receiveMessage', res)
         }
         sendResponse({ status: 'ok' })
     })
@@ -160,36 +173,156 @@ const setScale = (cb = null) => {
     cb && cb(enable)
 }
 
+/**
+ * 节流
+ * @param {*} func
+ * @param {*} delay
+ * @returns
+ */
+function throttle(func, delay) {
+    let timerId
+
+    return function (...args) {
+        if (!timerId) {
+            timerId = setTimeout(() => {
+                func.apply(this, args)
+                timerId = null
+            }, delay)
+        }
+    }
+}
+
+/**
+ * 项目列表更新
+ */
+const projectListChangedHandler = () => {
+    const mainScreenEl = document.querySelector('.main-screen')
+    if (!mainScreenEl) return
+    const listItems = mainScreenEl.children
+    Array.from(listItems).forEach((item) => {
+        if (!item.querySelector('.hook.preview')) {
+            const previewEl = item.querySelector('a.preview')
+            const hookEl = document.createElement('a')
+            hookEl.innerHTML = previewEl.innerHTML
+            hookEl.style.right = '60px'
+            hookEl.classList = 'preview hook'
+            hookEl.target = '_blank'
+            hookEl.href = previewEl.href.replace('screen', 'admin/hook')
+            hookEl.title = 'HOOK'
+            const icon = hookEl.querySelector('i')
+            icon.classList.replace('icon-preview', 'icon-debug')
+            previewEl.parentElement.appendChild(hookEl)
+        }
+    })
+}
+
+const projectListChangedHandlerThrottle = throttle(projectListChangedHandler, 300)
+
+/**
+ * 控制台页面
+ * @description 列表项插入打开hook页面的按钮
+ */
+const setupDashboard = () => {
+    /* 样式覆盖 */
+    const style = document.createElement('style')
+    style.type = 'text/css'
+    style.innerText = `
+      .screen .screen-main .main-name {flex-flow: wrap !important;height:auto!important;}
+      .screen .screen-main .screen-name-input {flex: unset; width: 100%;}
+      .screen .screen-name-input .input {width:100% !important;}
+      .screen .screen-info .screen-edit {opacity: 1;background: rgba(0,0,0,0.26);}
+      .screen .screen-info .screen-img {opacity: 1;}
+    `
+    document.head.appendChild(style)
+
+    /* 监听列表父节点 */
+    const targetElement = document.querySelector('.datav-content')
+    /* 创建一个 MutationObserver 实例 */
+    const observer = new MutationObserver((mutationsList, observer) => {
+        /* 处理变化 */
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'childList') projectListChangedHandlerThrottle()
+        }
+    })
+
+    // 配置观察选项
+    const config = { attributes: true, childList: true, subtree: true }
+    // 开始观察目标元素
+    observer.observe(targetElement, config)
+
+    /* 默认执行一次 */
+    projectListChangedHandlerThrottle()
+}
+
+/**
+ * Set up edit page
+ */
+const setupEditPage = () => {
+    /* 右上角添加跳转到hook页面的按钮 */
+    const container = document.querySelector('.global-actions')
+    const siblingButton = Array.from(container.children)[Array.from(container.children).length - 1]
+    const hookButton = document.createElement('a')
+    hookButton.innerHTML = siblingButton.innerHTML
+    hookButton.classList = 'hook header-button ml4'
+    hookButton.href = location.href.replace('screen', 'hook')
+    hookButton.title = 'HOOK'
+    hookButton.target = '_blank'
+    const icon = hookButton.querySelector('i')
+    icon.classList.replace('icon-local-deploy', 'icon-debug')
+    container.appendChild(hookButton)
+}
+
+/**
+ * Set up hook page
+ */
+const setupHookPage = () => {
+    // axios.get({})
+    console.log('=====================hook')
+}
+
 /* init */
 const init = () => {
+    console.log('content.js init')
     window.addEventListener('load', () => {
-        let getScaleTimer = setInterval(() => {
-            setScale((enable) => {
-                if (enable) {
-                    clearInterval(getScaleTimer)
-                    getScaleTimer = null
-                }
+        /* 判断当前是在哪个类型的页面 */
+        const { href } = window.location
+
+        /* 控制台 */
+        if (href.match(/\/\d{1,}\/project/)) setTimeout(setupDashboard, 1000)
+
+        /* 编辑页 */
+        if (href.match(/\/admin\/screen\/\w+/)) setTimeout(setupEditPage, 1000)
+
+        /* 预览页 */
+        if (href.match(/\/screen\/\w+/)) {
+            let getScaleTimer = setInterval(() => {
+                setScale((enable) => {
+                    if (enable) {
+                        clearInterval(getScaleTimer)
+                        getScaleTimer = null
+                    }
+                })
+            }, 1000)
+            window.addEventListener('resize', () => {
+                // 延迟设置
+                setTimeout(setScale, 300)
             })
-        }, 1000)
+
+            //创建面板元素
+            const datavHelperPanel = document.createElement('div')
+            datavHelperPanel.innerHTML = dataVHelper.template
+            document.querySelector('html').appendChild(datavHelperPanel)
+
+            dataVHelper.hookEl = document.querySelector('#hook')
+            dataVHelper.hookEl.setAttribute('src', dataVHelper.hookUrl)
+            eventRegister()
+        }
+
+        /* Hook页 */
+        if (href.match(/\/admin\/hook\/\w+/)) setTimeout(setupHookPage, 1000)
+
+        receiveMessage()
     })
-
-    window.addEventListener('resize', () => {
-        // 延迟设置
-        setTimeout(() => {
-            setScale()
-        }, 300)
-    })
-
-    //创建面板元素
-    const datavHelperPanel = document.createElement('div')
-    datavHelperPanel.innerHTML = dataVHelper.template
-    document.querySelector('html').appendChild(datavHelperPanel)
-
-    dataVHelper.hookEl = document.querySelector('#hook')
-    dataVHelper.hookEl.setAttribute('src', dataVHelper.hookUrl)
-
-    receiveMessage()
-    eventRegister()
 }
 
 init()

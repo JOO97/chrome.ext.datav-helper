@@ -44,3 +44,18 @@
 ![image-20221230094237311](https://zhangjiamin-bucket.oss-cn-hangzhou.aliyuncs.com/self/datav-helper-extension/image-20221230094237311.png)
 
 3.3 其余步骤`同2.1~2.2`
+
+# TODO
+
+1. 支持在编辑页直接打开 hook 页 或 查看 hook
+2. 支持在控制台直接打开 hook 页 2/3
+3. 支持在 hook 页打开预览或编辑页
+
+4. 环境变量注入
+   配置开发环境地址
+   离线环境地址
+
+5. hook 代码注释注入
+   最后更新时间
+   更新人
+   代码对比？

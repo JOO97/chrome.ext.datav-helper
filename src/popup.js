@@ -1,6 +1,6 @@
 let origins = []
 
-/* receive message */
+/* Receive message */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener((res, __, sendResponse) => {
         if (res['type'] === 'storageChange') {
@@ -12,23 +12,31 @@ const receiveMessage = () => {
 }
 
 const urlPattern = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/
-const eventRegister = () => {
-    const input = document.querySelector('#input')
-    input.addEventListener('keydown', (e) => {
-        if (e.keyCode !== 13) return
-        const { value } = e.target
-        if (!value || !urlPattern.test(value)) return
-        const find = origins.find((o) => o.url === value)
-        if (find) return
-        chrome.runtime.sendMessage({
-            type: 'addUrl',
-            url: value
-        })
-        input.value = ''
-    })
-}
-let delFlag = false
 
+/**
+ * Popup 事件注册
+ */
+const eventRegister = () => {
+    try {
+        const input = document.querySelector('#input')
+        input.addEventListener('keydown', (e) => {
+            if (e.keyCode !== 13) return
+            const { value } = e.target
+            if (!value || !urlPattern.test(value)) return alert('⚠️Please input the correct URL')
+            const find = origins.find((o) => o.url === value)
+            if (find) return alert('⚠️This URL already exists')
+            chrome.runtime.sendMessage({
+                type: 'addUrl',
+                url: value
+            })
+            input.value = ''
+        })
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+/* Set list item */
 const setListItem = async () => {
     let listItem = ''
     origins.forEach((item, index) => {
@@ -51,21 +59,25 @@ const setListItem = async () => {
         btn.onclick = async (e) => {
             await chrome.runtime.sendMessage({
                 type: 'delUrl',
-                url: origins[index + 1]['url']
+                url: origins[index + 2]['url']
             })
         }
     })
 }
 
+/* Init */
 const init = async () => {
-    // const res2 = await axios.get('http://localhost:3001/project/list');
-
-    // console.log('res2', res2);
-
+    /*  监听消息 */
     receiveMessage()
+
+    /* 从读取本地存储 */
     const res = await chrome.storage.sync.get('origins')
     origins = res['origins'] || []
+
+    /* 初始化列表数据 */
     setListItem(origins)
+
+    /* 事件注册 */
     eventRegister()
 }
 
