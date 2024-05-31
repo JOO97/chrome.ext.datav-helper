@@ -212,10 +212,12 @@ const projectListChangedHandler = () => {
         // })
         if (!item.querySelector('.hook.preview')) {
             const previewEl = item.querySelector('a.preview')
+
             const idEl = document.createElement('span')
             idEl.innerHTML = previewEl.href.split('screen/')[1].replace('m/', '')
             idEl.style.left = '20px'
             idEl.style.fontSize = '20px'
+            idEl.style.width = 'fit-content'
             idEl.style.fontWeight = 600
             idEl.classList = 'preview hook'
             previewEl.parentElement.appendChild(idEl)
