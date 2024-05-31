@@ -25,7 +25,8 @@
         "/content.css"
       ],
       "js": [
-        "/content.js"
+        "/content.js",
+        "/lib/jszip.min.js"
       ]
     }
   ],

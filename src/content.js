@@ -1,3 +1,8 @@
+/**
+ * Content script
+ * @description: 注入到页面的脚本
+ */
+
 const dataVHelper = {
     template: `
     <nav id="datav-helper">
@@ -200,18 +205,46 @@ const projectListChangedHandler = () => {
     if (!mainScreenEl) return
     const listItems = mainScreenEl.children
     Array.from(listItems).forEach((item) => {
+        const itemEl = item.querySelector('.my-screen')
+        // console.log('itemEl', itemEl)
+        // item.addEventListener('click', (e) => {
+        //     e.stopPropagation()
+        // })
         if (!item.querySelector('.hook.preview')) {
             const previewEl = item.querySelector('a.preview')
+            const idEl = document.createElement('span')
+            idEl.innerHTML = previewEl.href.split('screen/')[1].replace('m/', '')
+            idEl.style.left = '20px'
+            idEl.style.fontSize = '20px'
+            idEl.style.fontWeight = 600
+            idEl.classList = 'preview hook'
+            previewEl.parentElement.appendChild(idEl)
+
+            /* Hook */
             const hookEl = document.createElement('a')
             hookEl.innerHTML = previewEl.innerHTML
             hookEl.style.right = '60px'
             hookEl.classList = 'preview hook'
             hookEl.target = '_blank'
             hookEl.href = previewEl.href.replace('screen', 'admin/hook')
-            hookEl.title = 'HOOK'
+            hookEl.title = 'Hook'
             const icon = hookEl.querySelector('i')
             icon.classList.replace('icon-preview', 'icon-debug')
             previewEl.parentElement.appendChild(hookEl)
+
+            /* 下載 */
+            if (previewEl.href.includes('nebulabd') || previewEl.href.includes('datav')) {
+                const downloadEl = document.createElement('a')
+                downloadEl.innerHTML = previewEl.innerHTML
+                downloadEl.style.right = '83px'
+                downloadEl.classList = 'preview hook'
+                downloadEl.target = '_blank'
+                downloadEl.href = previewEl.href.replace('screen', 'api/admin/v4/pack')
+                downloadEl.title = 'Package'
+                const downloadIcon = downloadEl.querySelector('i')
+                downloadIcon.classList.replace('icon-preview', 'icon-local-deploy')
+                previewEl.parentElement.appendChild(downloadEl)
+            }
         }
     })
 }
@@ -276,9 +309,70 @@ const setupEditPage = () => {
  * Set up hook page
  */
 const setupHookPage = () => {
-    // axios.get({})
     console.log('=====================hook')
 }
+
+/**
+ * Set up pack page
+ */
+const setupPackPage = () => {
+    console.log('=====================pack page')
+
+    /* 监听列表父节点 */
+    const targetElement = document.querySelector('.pack-button')
+    /* 打包中 */
+    if (Array.from(targetElement.classList).includes('disable')) {
+        /* 创建一个 MutationObserver 实例 */
+        const observer = new MutationObserver((mutationsList, observer) => {
+            /* 处理变化 */
+            for (let mutation of mutationsList) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
+                    //打包完成
+                    console.log('打包完成', mutation.target.href)
+                    targetElement.parentElement.appendChild(createExtraDownloadBtn(mutation.target.href))
+                }
+            }
+        })
+        observer.observe(targetElement, { attributes: true })
+    } else {
+        /* 已经打包完成 */
+        console.log('已经打包完成', targetElement.href)
+        targetElement.parentElement.appendChild(createExtraDownloadBtn(targetElement.href))
+    }
+}
+
+const readFileFromUrl = (fileUrl) => {
+    return fetch(fileUrl)
+        .then((response) => response.arrayBuffer())
+        .catch((error) => {
+            console.error('Error reading file:', error)
+            throw error
+        })
+}
+
+const createExtraDownloadBtn = (href) => {
+    const el = document.createElement('a')
+    el.classList = 'pack-button'
+    el.href = 'javascript: void(0)'
+    el.style.marginLeft = '10px'
+    el.innerText = 'Pack assets from data'
+    el.addEventListener('click', async () => {
+        const arrayBuffer = await readFileFromUrl(href)
+        const zip = new JSZip()
+        console.log('zip', zip)
+        await zip.loadAsync(arrayBuffer)
+        /* 读取data.json文件 */
+        const dataJsonFileName = Object.keys(zip.files).find((n) => n.includes('data.json'))
+        if (!dataJsonFileName) return
+
+        const data = await zip.file(dataJsonFileName).async('string')
+        downloadAssetsFromData(JSON.parse(data).source)
+    })
+    return el
+}
+
+//TODO:
+const downloadAssetsFromData = () => {}
 
 /* init */
 const init = () => {
@@ -288,7 +382,7 @@ const init = () => {
         const { href } = window.location
 
         /* 控制台 */
-        if (href.match(/\/\d{1,}\/project/)) setTimeout(setupDashboard, 1000)
+        if (href.match(/\/\d{1,}\/project(?:\?.*)?/)) setTimeout(setupDashboard, 1000)
 
         /* 编辑页 */
         if (href.match(/\/admin\/screen\/\w+/)) setTimeout(setupEditPage, 1000)
@@ -320,6 +414,9 @@ const init = () => {
 
         /* Hook页 */
         if (href.match(/\/admin\/hook\/\w+/)) setTimeout(setupHookPage, 1000)
+
+        /* 打包页 */
+        if (href.match(/\/admin\/packWatcher\/\d{1,}\/[\w-]+/)) setTimeout(setupPackPage, 1000)
 
         receiveMessage()
     })

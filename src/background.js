@@ -163,6 +163,12 @@ const injectScript = () => {
             if (frames.length === 1 && frames[0].frameType === 'outermost_frame') {
                 origins.forEach(({ url, readonly }) => {
                     if (readonly || tab.url.indexOf(url) === -1) return
+
+                    chrome.scripting.executeScript({
+                        target: { tabId: tab.id, frameIds: [frames[0].frameId] },
+                        files: ['jszip.min.js']
+                    })
+
                     chrome.scripting.executeScript({
                         target: { tabId: tab.id, frameIds: [frames[0].frameId] },
                         files: ['content.js']

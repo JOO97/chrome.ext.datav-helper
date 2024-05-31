@@ -182,3 +182,8 @@
 .icon-pushpin:before {
     content: '\e7e3';
 }
+
+.pack-watcher p {
+    display: flex;
+    justify-content: center;
+}
