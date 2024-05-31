@@ -82,7 +82,10 @@ const requestHandler = () => {
     chrome.webRequest.onBeforeSendHeaders.addListener(
         (details) => {
             /* 匹配获取hook接口, 获取到请求头后请求screenInfo接口, 更新title */
-            if (details.method === 'GET' && details.url.match(/\w+\/api\/admin(?:\/v3)?\/screen\/\w+\/hook(?:\?.*)?/)) {
+            if (
+                details.method === 'GET' &&
+                details.url.match(/\w+\/api\/admin(?:\/v3)?\/screen\/[\w-]+\/hook(?:\?.*)?/)
+            ) {
                 console.log('matched', details, details.requestHeaders)
                 chrome.tabs.get(details.tabId, async (tab) => {
                     if (!tab) return
