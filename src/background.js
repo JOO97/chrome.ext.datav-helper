@@ -14,12 +14,22 @@ const defaultOrigins = [
 let origins = []
 
 const tabHeaders = {}
+const hooks = {}
 
 /* receive message */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener((res, __, sendResponse) => {
         if (res['type'] === 'addUrl') setOrigin({ url: res.url, disabled: false })
         else if (res['type'] === 'delUrl') setOrigin({ url: res.url }, true)
+        else if (res.action === 'download') {
+            // 接收来自 content.js 的消息,执行下载
+            chrome.downloads.download({
+                filename: res.filename,
+                // saveAs: true,
+                conflictAction: 'uniquify',
+                url: 'data:application/zip;base64,' + btoa(String.fromCharCode(...new Uint8Array(res.content)))
+            })
+        }
         sendResponse({ status: 'ok' })
     })
 }
@@ -54,7 +64,6 @@ const getScreenInfo = (requestInfo) => {
 }
 
 const setTitle = (title) => {
-    console.log('setTitle')
     document.title = `[💻]${title}`
 }
 
@@ -86,7 +95,6 @@ const requestHandler = () => {
                 details.method === 'GET' &&
                 details.url.match(/\w+\/api\/admin(?:\/v3)?\/screen\/[\w-]+\/hook(?:\?.*)?/)
             ) {
-                console.log('matched', details, details.requestHeaders)
                 chrome.tabs.get(details.tabId, async (tab) => {
                     if (!tab) return
                     let [url, workspaceId] = details.url.split('?')
@@ -109,7 +117,38 @@ const requestHandler = () => {
                             .then(() => console.log('injected a function'))
                     } catch (error) {
                         tabHeaders[url] = null
+                        const res = await getScreenInfo({
+                            screenId,
+                            url: `${url.replace('hook', 'screen_info')}?${workspaceId}&screenId=${screenId}`,
+                            headers: details.requestHeaders
+                        })
                     }
+                })
+            } else if (details.method === 'GET' && details.url.match(/\w+\/pack\/status\/[\w-]/)) {
+                console.log('matched pack api')
+                console.log('matched', details, details.requestHeaders)
+                chrome.tabs.get(details.tabId, async (tab) => {
+                    console.log('tab', tab)
+                    if (!tab) return
+                    /* 从当前页面的url中获取screenId */
+                    let screenId = ''
+                    const tabUrlItems = tab.url.split('/')
+                    tabUrlItems.forEach((n, index) => {
+                        if (n === 'packWatcher') screenId = tabUrlItems[index + 1]
+                    })
+
+                    const [_, workspaceId] = details.url.split('?')
+                    const url = `${details.initiator}/api/admin/v3/screen/${screenId}/hook?${workspaceId}`
+                    const res = await getScreenInfo({
+                        url,
+                        headers: details.requestHeaders
+                    })
+                    chrome.tabs.sendMessage(tab.id, {
+                        type: 'request',
+                        name: 'getHook',
+                        status: 200,
+                        data: res.data.hook
+                    })
                 })
             }
             return { requestHeaders: details.requestHeaders }

@@ -3,6 +3,10 @@
  * @description: 注入到页面的脚本
  */
 
+const cache = {
+    hook: null
+}
+
 const dataVHelper = {
     template: `
     <nav id="datav-helper">
@@ -56,9 +60,9 @@ const receiveMessage = () => {
                 //控制台的项目列表有更新
                 case 'getProject':
                     break
-                //请求当前screen信息接口
-                case 'getScreenInfo':
-                    getScreenInfo()
+                /* 获取hook NOTE: 进入打包页面后background.js中会自动请求获取hook的接口，并把结果发送给content.js */
+                case 'getHook':
+                    cache.hook = res.data.replace(`ENV: 'dev'`, `ENV: 'prod'`)
                     break
                 default:
                     break
@@ -68,6 +72,10 @@ const receiveMessage = () => {
         }
         sendResponse({ status: 'ok' })
     })
+}
+
+const getHook = (requestInfo) => {
+    console.log('requestInfo', requestInfo)
 }
 
 /* reload */
@@ -213,15 +221,6 @@ const projectListChangedHandler = () => {
         if (!item.querySelector('.hook.preview')) {
             const previewEl = item.querySelector('a.preview')
 
-            const idEl = document.createElement('span')
-            idEl.innerHTML = previewEl.href.split('screen/')[1].replace('m/', '')
-            idEl.style.left = '20px'
-            idEl.style.fontSize = '20px'
-            idEl.style.width = 'fit-content'
-            idEl.style.fontWeight = 600
-            idEl.classList = 'preview hook'
-            previewEl.parentElement.appendChild(idEl)
-
             /* Hook */
             const hookEl = document.createElement('a')
             hookEl.innerHTML = previewEl.innerHTML
@@ -236,12 +235,22 @@ const projectListChangedHandler = () => {
 
             /* 下載 */
             if (previewEl.href.includes('nebulabd') || previewEl.href.includes('datav')) {
+                const idEl = document.createElement('span')
+                idEl.innerHTML = previewEl.href.split('screen/')[1].replace('m/', '')
+                idEl.style.left = '20px'
+                idEl.style.fontSize = '20px'
+                idEl.style.width = 'fit-content'
+                idEl.style.fontWeight = 600
+                idEl.classList = 'preview hook'
+                previewEl.parentElement.appendChild(idEl)
+
                 const downloadEl = document.createElement('a')
                 downloadEl.innerHTML = previewEl.innerHTML
                 downloadEl.style.right = '83px'
                 downloadEl.classList = 'preview hook'
                 downloadEl.target = '_blank'
-                downloadEl.href = previewEl.href.replace('screen', 'api/admin/v4/pack')
+                let downloadHref = previewEl.href.replace('screen', 'api/admin/v4/pack')
+                downloadEl.href = downloadHref
                 downloadEl.title = 'Package'
                 const downloadIcon = downloadEl.querySelector('i')
                 downloadIcon.classList.replace('icon-preview', 'icon-local-deploy')
@@ -318,8 +327,6 @@ const setupHookPage = () => {
  * Set up pack page
  */
 const setupPackPage = () => {
-    console.log('=====================pack page')
-
     /* 监听列表父节点 */
     const targetElement = document.querySelector('.pack-button')
     /* 打包中 */
@@ -357,24 +364,63 @@ const createExtraDownloadBtn = (href) => {
     el.classList = 'pack-button'
     el.href = 'javascript: void(0)'
     el.style.marginLeft = '10px'
-    el.innerText = 'Pack assets from data'
+    // el.innerText = 'Pack assets from data'
+    el.innerText = 'Complete packaging'
     el.addEventListener('click', async () => {
         const arrayBuffer = await readFileFromUrl(href)
         const zip = new JSZip()
-        console.log('zip', zip)
         await zip.loadAsync(arrayBuffer)
         /* 读取data.json文件 */
         const dataJsonFileName = Object.keys(zip.files).find((n) => n.includes('data.json'))
         if (!dataJsonFileName) return
 
         const data = await zip.file(dataJsonFileName).async('string')
-        downloadAssetsFromData(JSON.parse(data).source)
+        // downloadAssetsFromData(JSON.parse(data).source)
+        zip.file('hook.js', 'console.log("This is a new file!");')
+
+        // 生成一个新的 zip 文件
+        const newZip = await zip.generateAsync({ type: 'blob' })
+        // chrome.downloads.download({
+        //     url: URL.createObjectURL(newZip),
+        //     filename: 'new_file.zip',
+        //     saveAs: true
+        // })
+
+        // 向后台脚本发送消息,请求下载
+        chrome.runtime.sendMessage({
+            action: 'download',
+            filename: 'new_file.zip',
+            content: newZip
+        })
     })
     return el
 }
 
 //TODO:
-const downloadAssetsFromData = () => {}
+const downloadAssetsFromData = (source) => {
+    console.log('====', downloadAssetsFromData)
+
+    /* 从缓存中获取当前屏的hook代码 */
+    console.log('====', cache.hook)
+
+    //  const createJSFile()
+}
+
+function createJSFile() {
+    var code = '' // 在这里输入需要写入文件的内容
+
+    var blob = new Blob([code], { type: 'text/javascript' })
+    var url = URL.createObjectURL(blob)
+
+    // 创建一个链接，并设置下载属性
+    var link = document.createElement('a')
+    link.href = url
+    link.download = 'myfile.js'
+    link.click()
+
+    // 释放URL对象
+    URL.revokeObjectURL(url)
+}
 
 /* init */
 const init = () => {

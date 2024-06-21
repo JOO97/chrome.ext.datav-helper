@@ -47,7 +47,8 @@
     "scripting",
     "webNavigation",
     "declarativeNetRequest",
-    "declarativeNetRequestFeedback"
+    "declarativeNetRequestFeedback",
+    "downloads"
   ],
   "host_permissions": [
     "<all_urls>"
