@@ -50,7 +50,7 @@ let panelFixed = false
 /* receive message */
 const receiveMessage = () => {
     chrome.runtime.onMessage.addListener((res, sender, sendResponse) => {
-        console.log('receiveMessage', res)
+        // console.log('receiveMessage', res)
         if (res['type'] === 'request' && res['status'] === 200) {
             switch (res['name']) {
                 // 更新hook成功 刷新页面
@@ -62,7 +62,7 @@ const receiveMessage = () => {
                     break
                 /* 获取hook NOTE: 进入打包页面后background.js中会自动请求获取hook的接口，并把结果发送给content.js */
                 case 'getHook':
-                    cache.hook = res.data.replace(`ENV: 'dev'`, `ENV: 'prod'`)
+                    cache.hook = res.data
                     break
                 default:
                     break
@@ -72,10 +72,6 @@ const receiveMessage = () => {
         }
         sendResponse({ status: 'ok' })
     })
-}
-
-const getHook = (requestInfo) => {
-    console.log('requestInfo', requestInfo)
 }
 
 /* reload */
@@ -213,14 +209,26 @@ const projectListChangedHandler = () => {
     if (!mainScreenEl) return
     const listItems = mainScreenEl.children
     Array.from(listItems).forEach((item) => {
-        const itemEl = item.querySelector('.my-screen')
+        const previewEl = item.querySelector('a.preview')
+        const screenId = previewEl.href.split('/screen/')[1]
         // console.log('itemEl', itemEl)
         // item.addEventListener('click', (e) => {
         //     e.stopPropagation()
+        //     console.log('click')
         // })
-        if (!item.querySelector('.hook.preview')) {
-            const previewEl = item.querySelector('a.preview')
+        const mainNameEl = item.querySelector('.main-name')
 
+        if (!item.querySelector('.checkbox')) {
+            const checkbox = document.createElement('input')
+            checkbox.classList.add('checkbox')
+            checkbox.type = 'checkbox'
+            checkbox.id = `screen-${screenId}`
+            checkbox.name = `screen-${screenId}`
+            checkbox.href = `${location.origin}/api/admin/v4/pack/${screenId}`
+            mainNameEl.appendChild(checkbox)
+        }
+
+        if (!item.querySelector('.hook.preview')) {
             /* Hook */
             const hookEl = document.createElement('a')
             hookEl.innerHTML = previewEl.innerHTML
@@ -258,6 +266,23 @@ const projectListChangedHandler = () => {
             }
         }
     })
+
+    /* 批量打包按钮 */
+    if (!document.querySelector('.package-multiple')) {
+        const packageAllBtn = document.createElement('a')
+        packageAllBtn.classList = 'goto-workspace package-multiple'
+        packageAllBtn.innerText = 'Package'
+        packageAllBtn.href = 'javascript: void(0)'
+        packageAllBtn.addEventListener('click', () => {
+            const currentSelected = Array.from(document.querySelectorAll('input.checkbox')).filter((el) => el.checked)
+            console.log('currentSelected', currentSelected)
+
+            currentSelected.forEach((el) => {
+                window.open(el.href, '_blank')
+            })
+        })
+        document.querySelector('.project-title').appendChild(packageAllBtn)
+    }
 }
 
 const projectListChangedHandlerThrottle = throttle(projectListChangedHandler, 300)
@@ -320,7 +345,23 @@ const setupEditPage = () => {
  * Set up hook page
  */
 const setupHookPage = () => {
-    console.log('=====================hook')
+    const href = location.href
+    const parentElement = document.querySelector('.hook-text')
+
+    const toPreviewBtn = document.createElement('a')
+    toPreviewBtn.innerText = 'Preview'
+    toPreviewBtn.classList = 'datav-btn-md datav-btn-outline datav-btn field-btn'
+    toPreviewBtn.href = href.replace('/admin/hook', '/screen')
+    toPreviewBtn.target = '_blank'
+
+    const toEditBtn = document.createElement('a')
+    toEditBtn.innerText = 'Edit'
+    toEditBtn.classList = 'datav-btn-md datav-btn-outline datav-btn field-btn'
+    toEditBtn.href = href.replace('hook', 'screen')
+    toEditBtn.target = '_blank'
+
+    parentElement.appendChild(toEditBtn)
+    parentElement.appendChild(toPreviewBtn)
 }
 
 /**
@@ -336,90 +377,105 @@ const setupPackPage = () => {
             /* 处理变化 */
             for (let mutation of mutationsList) {
                 if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-                    //打包完成
-                    console.log('打包完成', mutation.target.href)
-                    targetElement.parentElement.appendChild(createExtraDownloadBtn(mutation.target.href))
+                    /* 打包完成 */
+                    const dBtn = createFullDownloadBtn(mutation.target.href)
+                    targetElement.parentElement.appendChild(dBtn)
+                    dBtn.click()
                 }
             }
         })
         observer.observe(targetElement, { attributes: true })
     } else {
-        /* 已经打包完成 */
-        console.log('已经打包完成', targetElement.href)
-        targetElement.parentElement.appendChild(createExtraDownloadBtn(targetElement.href))
+        /* 打包完成 */
+        const dBtn = createFullDownloadBtn(targetElement.href)
+        targetElement.parentElement.appendChild(dBtn)
+        dBtn.click()
     }
 }
 
+/**
+ * 从url中读取对应的文件内容
+ * @param {*} fileUrl
+ * @returns
+ */
 const readFileFromUrl = (fileUrl) => {
     return fetch(fileUrl)
         .then((response) => response.arrayBuffer())
         .catch((error) => {
-            console.error('Error reading file:', error)
             throw error
         })
 }
 
-const createExtraDownloadBtn = (href) => {
+/**
+ * 创建 Full Download 按钮
+ * @param {*} href
+ * @returns
+ * @description 在原本的打包下载功能上将hook代码也进行打包, 并做一些额外处理, 如环境参数替换等
+ */
+const createFullDownloadBtn = (href) => {
     const el = document.createElement('a')
     el.classList = 'pack-button'
     el.href = 'javascript: void(0)'
     el.style.marginLeft = '10px'
-    // el.innerText = 'Pack assets from data'
-    el.innerText = 'Complete packaging'
+    el.style.width = 'auto'
+    el.style.padding = '0 10px'
+
+    el.innerText = 'Full Download'
+
+    const zipFileName = href.split('/zip/')[1]
+
     el.addEventListener('click', async () => {
+        console.log('start full download')
+        const p = document.querySelector('.pack-watcher').children[1]
+        p.innerText = 'Downloading...'
+        const paceElements = document.querySelectorAll('.pace')
+        Array.from(paceElements).forEach((el) => {
+            el.classList.remove('stop')
+            el.classList.add('pace-active')
+        })
+
         const arrayBuffer = await readFileFromUrl(href)
         const zip = new JSZip()
         await zip.loadAsync(arrayBuffer)
+
         /* 读取data.json文件 */
         const dataJsonFileName = Object.keys(zip.files).find((n) => n.includes('data.json'))
         if (!dataJsonFileName) return
 
-        const data = await zip.file(dataJsonFileName).async('string')
+        // const data = await zip.file(dataJsonFileName).async('string')
         // downloadAssetsFromData(JSON.parse(data).source)
-        zip.file('hook.js', 'console.log("This is a new file!");')
 
-        // 生成一个新的 zip 文件
-        const newZip = await zip.generateAsync({ type: 'blob' })
-        // chrome.downloads.download({
-        //     url: URL.createObjectURL(newZip),
-        //     filename: 'new_file.zip',
-        //     saveAs: true
-        // })
+        /* 添加hook.js文件 */
+        const hookContent = getHook()
+        zip.file(`${zipFileName.replace('.zip', '')}/hook.js`, hookContent)
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            // see FileSaver.js
+            saveAs(content, zipFileName)
 
-        // 向后台脚本发送消息,请求下载
-        chrome.runtime.sendMessage({
-            action: 'download',
-            filename: 'new_file.zip',
-            content: newZip
+            Array.from(paceElements).forEach((el) => {
+                el.classList.remove('pace-active')
+                el.classList.add('stop')
+            })
+            p.innerText = '页面打包完成, 请下载'
         })
     })
     return el
 }
 
-//TODO:
-const downloadAssetsFromData = (source) => {
-    console.log('====', downloadAssetsFromData)
-
-    /* 从缓存中获取当前屏的hook代码 */
-    console.log('====', cache.hook)
-
-    //  const createJSFile()
-}
-
-function createJSFile() {
-    var code = '' // 在这里输入需要写入文件的内容
-
-    var blob = new Blob([code], { type: 'text/javascript' })
-    var url = URL.createObjectURL(blob)
-
-    // 创建一个链接，并设置下载属性
-    var link = document.createElement('a')
-    link.href = url
-    link.download = 'myfile.js'
-    link.click()
-
-    // 释放URL对象
-    URL.revokeObjectURL(url)
+/**
+ * 获取hook代码
+ */
+const getHook = () => {
+    let { hook = '' } = cache
+    if (!hook)
+        return `/**
+ * @param {Stage} stage
+ */
+module.exports = (stage) => { }
+`
+    /* hook处理 */
+    const result = hook.replace(`ENV: 'dev'`, `ENV: 'prod'`)
+    return result
 }
 
 /* init */
@@ -436,7 +492,7 @@ const init = () => {
         if (href.match(/\/admin\/screen\/\w+/)) setTimeout(setupEditPage, 1000)
 
         /* 预览页 */
-        if (href.match(/\/screen\/\w+/)) {
+        if (href.match(/^(?!.*\/admin\/).*\/screen\/\w+/)) {
             let getScaleTimer = setInterval(() => {
                 setScale((enable) => {
                     if (enable) {

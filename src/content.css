@@ -187,3 +187,11 @@
     display: flex;
     justify-content: center;
 }
+
+.datav-hook .hook-text {
+    justify-content: flex-end !important;
+}
+
+.datav-btn.datav-btn-md.field-btn {
+    margin-left: 12px;
+}

@@ -26,7 +26,8 @@
       ],
       "js": [
         "/content.js",
-        "/lib/jszip.min.js"
+        "/lib/jszip.min.js",
+        "/lib/file-saver.min.js"
       ]
     }
   ],

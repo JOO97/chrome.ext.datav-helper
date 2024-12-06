@@ -205,11 +205,6 @@ const injectScript = () => {
 
                     chrome.scripting.executeScript({
                         target: { tabId: tab.id, frameIds: [frames[0].frameId] },
-                        files: ['jszip.min.js']
-                    })
-
-                    chrome.scripting.executeScript({
-                        target: { tabId: tab.id, frameIds: [frames[0].frameId] },
                         files: ['content.js']
                     })
                     chrome.scripting.insertCSS({
